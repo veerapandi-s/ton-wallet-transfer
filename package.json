@@ -1,0 +1,19 @@
+{
+  "name": "tonjs",
+  "version": "1.0.0",
+  "description": "Ton experiment",
+  "main": "app.ts",
+  "author": "Veerapandi S",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config src/app.ts"
+  },
+  "dependencies": {
+    "@orbs-network/ton-access": "^2.3.3",
+    "@ton/core": "^0.56.3",
+    "@ton/crypto": "^3.2.0",
+    "@ton/ton": "^13.11.1",
+    "buffer": "^6.0.3",
+    "dotenv": "^16.4.5"
+  }
+}
