@@ -6,14 +6,21 @@
   "author": "Veerapandi S",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -r dotenv/config src/app.ts"
+    "dev": "ts-node src/app.ts"
   },
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",
+    "@pinata/sdk": "^2.1.0",
     "@ton/core": "^0.56.3",
     "@ton/crypto": "^3.2.0",
     "@ton/ton": "^13.11.1",
     "buffer": "^6.0.3",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "ton": "^13.9.0",
+    "ton-core": "^0.53.0",
+    "ton-crypto": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.11"
   }
 }
