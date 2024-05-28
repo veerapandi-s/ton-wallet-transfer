@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+dotenv.config();
 import { updateMetadataFiles, uploadFolderToIPFS } from "./metadata";
 
 import { openWallet } from "./utils";
@@ -7,8 +8,8 @@ import { NftCollection } from "./contracts/NFTCollection";
 import { waitSeqno } from "./delay";
 import { NftItem } from "./contracts/NftItem";
 import { toNano } from "ton-core";
+import { createWallet } from "./createWallet";
 
-dotenv.config();
 
 async function init() {
   const metadataFolderPath = "./data/metadata/";
@@ -61,7 +62,7 @@ async function init() {
         amount: toNano("0.05"),
         commonContentUrl: file,
       };
-  
+
       const nftItem = new NftItem(collection);
       seqno = await nftItem.deploy(wallet, mintParams);
       console.log(`Successfully deployed ${index + 1} NFT`);
@@ -73,4 +74,4 @@ async function init() {
   }
 }
 
-void init();
+createWallet();
