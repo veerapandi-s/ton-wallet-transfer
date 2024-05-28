@@ -6,7 +6,7 @@
   "author": "Veerapandi S",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node src/app.ts"
+    "dev": "ts-node src/index.ts"
   },
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",

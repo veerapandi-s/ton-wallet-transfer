@@ -31,7 +31,13 @@ export const createWallet = async () => {
         console.log(mnemonics);
         let workchain = 0; // Usually you need a workchain 0
         let wallet = WalletContractV4.create({ workchain, publicKey: keyPair.publicKey });
-        console.log(wallet.address)
+        const hexAdd = wallet.address.toRawString();
+        const bounceable = wallet.address.toString({ testOnly: false });
+        const nonBounceable = wallet.address.toString({ bounceable: false, testOnly: false });
+
+        console.log("Hex : ", hexAdd);
+        console.log("Bouncable : ", bounceable);
+        console.log("Non Bounceable : ", nonBounceable); // Need to store non bouncable
     } catch (error) {
         console.error("Error in creating", createWallet);
     }

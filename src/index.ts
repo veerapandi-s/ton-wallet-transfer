@@ -1,12 +1,15 @@
-import { mnemonicToWalletKey } from "@ton/crypto";
+import * as dotenv from "dotenv";
+dotenv.config();
 import { TonClient, WalletContractV4, fromNano } from "@ton/ton";
 import { getHttpEndpoint } from "@orbs-network/ton-access";
-import { internal } from "@ton/core";
+import { transferNFT } from "./contracts/utils";
+import { openWallet } from "./utils";
+import { Address } from "ton-core";
 
 const isTest = true;
 
-const sleep = (ms:number) => {
-  return new Promise( resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const init = async () => {
@@ -21,27 +24,26 @@ const init = async () => {
       endpoint
     });
 
+
     
-    const mnemonic = 'thought permit hip cycle bicycle amazing grain open brass vendor theory walk manage goat traffic noise hole smooth bleak arrest fork domain address before';
-    const key = await mnemonicToWalletKey(mnemonic.split(" "));
-    const workchain = 0;
-    const wallet = WalletContractV4.create({ publicKey: key.publicKey, workchain });
+    const wallet = await openWallet(process.env.MNEMONIC!.split(" "), true);
 
-    // const hexAdd = wallet.address.toRawString();
-    // const bounceable = wallet.address.toString({ testOnly: isTest });
-    // const nonBounceable = wallet.address.toString({ bounceable: false, testOnly: isTest });
+    const hexAdd = wallet.contract.address.toRawString();
+    const bounceable = wallet.contract.address.toString({ testOnly: isTest });
+    const nonBounceable = wallet.contract.address.toString({ bounceable: false, testOnly: isTest });
 
 
 
-    // console.log("Hex : ", hexAdd);
-    // console.log("Bouncable : ", bounceable);
-    // console.log("Non Bounceable : ", nonBounceable);
+    console.log("Hex : ", hexAdd);
+    console.log("Bouncable : ", bounceable);
+    console.log("Non Bounceable : ", nonBounceable);
 
 
 
 
 
-    const contract = client.open(wallet);
+
+
 
     // const balance = await contract.getBalance();
 
@@ -51,10 +53,10 @@ const init = async () => {
 
     // console.log("Is Contract depyloyed : ", isContractDeployed);
 
-    let seqno = await contract.getSeqno();
+    let seqno = await wallet.contract.getSeqno();
 
     // console.log("Sequence No is : ", seqno);
-    
+
 
     // let transfer = contract.createTransfer({
     //   seqno: seqno,
@@ -71,28 +73,32 @@ const init = async () => {
 
     // console.log("Transaction Result : ", txnRes);
 
-    await contract.sendTransfer({
-      secretKey : key.secretKey,
-      seqno,
-      messages : [
-        internal({
-          to : 'EQA4V9tF4lY2S_J-sEQR7aUj9IwW-Ou2vJQlCn--2DLOLR5e',
-          value : '0.05',
-          body : 'Hello',
-          bounce : false
-        })
-      ]
-    })
+    // await contract.sendTransfer({
+    //   secretKey : key.secretKey,
+    //   seqno,
+    //   messages : [
+    //     internal({
+    //       to : 'EQA4V9tF4lY2S_J-sEQR7aUj9IwW-Ou2vJQlCn--2DLOLR5e',
+    //       value : '0.05',
+    //       body : 'Hello',
+    //       bounce : false
+    //     })
+    //   ]
+    // })
 
+
+    const nftItemAddress = "EQCjLbPs8uPe6wiWvDpIacosiSD97RMaohpvwddnRPDQFiw7";
+    const toAddress = "0QABTwH5TicCa-iK9QGyy3f7iCAQ4qDooL5kU_qZCO8zs57w";
+
+    await transferNFT(wallet, Address.parse(nftItemAddress), Address.parse(toAddress));
     let currentSeqNo = seqno;
 
-    while(currentSeqNo == seqno) {
+    while (currentSeqNo == seqno) {
       console.log("Waiting for transaction to confirm...");
       await sleep(1500);
-      currentSeqNo = await contract.getSeqno()
+      currentSeqNo = await wallet.contract.getSeqno()
     }
     console.log("Transaction confirmed", currentSeqNo);
-    
   } catch (error) {
     console.error(error);
   }
